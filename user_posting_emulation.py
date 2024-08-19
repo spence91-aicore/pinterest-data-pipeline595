@@ -8,10 +8,21 @@ import sqlalchemy
 from sqlalchemy import text
 import yaml
 from typing import Dict
+import requests
+import json
+import datetime
 
 
 random.seed(100)
 
+def json_default(obj):
+    """This is to fix json.dumps issues with Decimals and datetimes"""
+    from decimal import Decimal
+    if isinstance(obj, Decimal):
+        return str(obj)
+        raise TypeError("Object of type '%s' is not JSON serializable" % type(obj).__name__)
+    if isinstance(obj, datetime.datetime):
+        return obj.__str__()
 
 class AWSDBConnector:
 
@@ -56,7 +67,7 @@ class AWSDBConnector:
 new_connector = AWSDBConnector()
 
 
-def run_infinite_post_data_loop():
+def run_infinite_post_data_loop(endpoint='https://f4q1we8e02.execute-api.us-east-1.amazonaws.com/prod/topics/'):
     while True:
         sleep(random.randrange(0, 2))
         random_row = random.randint(0, 11000)
@@ -82,9 +93,21 @@ def run_infinite_post_data_loop():
             for row in user_selected_row:
                 user_result = dict(row._mapping)
             
-            print(pin_result)
-            print(geo_result)
-            print(user_result)
+            #send to kafka instance
+            headers = {'Content-Type': 'application/vnd.kafka.json.v2+json'}  
+            for i in [
+                [pin_result,'124a514b9149.pin'],
+                [geo_result,'124a514b9149.geo'],
+                [user_result,'124a514b9149.user']
+            ]:
+                print(i)
+                url = endpoint + i[1] 
+                #build the payload
+                payload = { "records" : [ { "value" : i[0] }]}
+                json_payload=json.dumps(payload,default=json_default)
+                response = requests.request("POST", url, headers=headers, data=json_payload)
+                print(response.status_code)  
+
 
 
 if __name__ == "__main__":
