@@ -2,7 +2,11 @@
 
 ### Scenario:
 
-Pinterest crunches billions of data points every day to decide how to provide more value to their users. This is an attempt to create a (simplified) similar system using AWS Cloud.
+Pinterest crunches billions of data points every day to decide how to provide more value to their users. This is an attempt to demonstrate how to create a (simplified) similar system using AWS Cloud.
+
+## Scenario Architecture
+
+![Demo architecture](img/Pintrest_pipeline_arch.jpg)
 
 ### 
 
@@ -10,14 +14,13 @@ Pinterest crunches billions of data points every day to decide how to provide mo
  creating inputs and outputs for Pintrest-style data. And interacting with 
  creating sample data, similar to Pintrest outputs. 
 
-There's two main 
+There's two main demonstrations:
 
-Batch Processing
-Streaming Data.
+* Batch Processing - where sample Pinterest data is sent via a configured Amazon API Gateway to a Kafka consumer, is written to an S3 bucket, which is then consumed by Databricks, and finally cleansed and processed for valuable insights.
+* Streaming data processing - where sample Pinterest data is sent to an Amazon Kinesis Data Stream which is then consumed by Databricks and finally cleansed and written to a Databricks Delta table
 
-## Scenario Architecture
+(Please note that creating, and configuring a Kafka/MSK instance is *out of scope* for this project)
 
-![The diagram of the architecture used in the project.](img/Pintrest_pipeline_arch.jpg)
 
 
 ## Local Installation
