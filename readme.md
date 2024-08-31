@@ -1,8 +1,8 @@
 # Pintrest Data Pipeline
 
-### Scenario:
+## Scenario:
 
-Pinterest crunches billions of data points every day to decide how to provide more value to their users. This is an attempt to demonstrate how to create a (simplified) similar system using AWS Cloud.
+Pinterest crunches billions of data points every day to decide how to provide more value to their users. This is an attempt to demonstrate how to create a (simplified) similar system using Amazon Web Services.
 
 ## Scenario Architecture
 
@@ -16,11 +16,25 @@ Pinterest crunches billions of data points every day to decide how to provide mo
 
 There's two main demonstrations:
 
-* Batch Processing - where sample Pinterest data is sent via a configured Amazon API Gateway to a Kafka consumer, is written to an S3 bucket, which is then consumed by Databricks, and finally cleansed and processed for valuable insights.
+* Batch Processing - where sample Pinterest data is sent via a configured Amazon API Gateway to a Kafka producer, is written to an S3 bucket, which is then consumed by Databricks, and finally cleansed and processed for valuable insights. The batch processing schedule is handled by Amazon Managed Workflows for Apache Airflow.
 * Streaming data processing - where sample Pinterest data is sent to an Amazon Kinesis Data Stream which is then consumed by Databricks and finally cleansed and written to a Databricks Delta table
 
 (Please note that creating, and configuring a Kafka/MSK instance is *out of scope* for this project)
 
+
+# File Structure
+
+For the batch processing demonstration:
+
+* `user_posting_emulation.py` -  This script pulls sample Pinterest data, raw data, from a database, and then sends the data to a configured Amazon API gateway.  The gate endpoints have been configured so that the data is sent to a Kafka producer.
+
+* `databricks_s3_to_databricks.ipynb` -  This notebook is run on the Databricks platform and is scheduled to run using Amazon managed workflows for Apache Airflow.  Pinterest data is pulled from an Amazon S3 bucket, the data is cleansed and then finally the data is processed for insights.  Each step is commented in the file itself.
+
+For the streaming demonstration:
+
+* `user_posting_emulation_streaming.py` - This script pulls sample Pinterest data, raw data, from a database, and then sends the data to a configured Amazon API gateway (different endpoints to the batch demo).  The gate endpoints have been configured so that the data is sent to an Amazon Kinesis data stream instance.
+
+* `databricks_kinisis_to_databricks.ipynb` -  This notebook is run on the Databricks platform.  It reads data from Kinesis streams, it cleanses the data and then writes the cleansed data to tables in Databricks.  This can be set to be run indefinitely so that the streaming data is constantly processed and written.
 
 
 ## Local Installation
