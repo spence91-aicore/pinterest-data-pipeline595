@@ -1,9 +1,23 @@
 # Pintrest Data Pipeline
 
-Scenario:
+### Scenario:
 
 Pinterest crunches billions of data points every day to decide how to provide more value to their users. This is an attempt to create a (simplified) similar system using AWS Cloud.
 
+### 
+
+ This code base is concerned with 
+ creating inputs and outputs for Pintrest-style data. And interacting with 
+ creating sample data, similar to Pintrest outputs. 
+
+There's two main 
+
+Batch Processing
+Streaming Data.
+
+## Scenario Architecture
+
+![The diagram of the architecture used in the project.](img\Pintrest_pipeline_arch.jpg)
 
 
 ## Local Installation
