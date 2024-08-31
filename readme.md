@@ -30,6 +30,8 @@ For the batch processing demonstration:
 
 * `databricks_s3_to_databricks.ipynb` -  This notebook is run on the Databricks platform and is scheduled to run using Amazon managed workflows for Apache Airflow.  Pinterest data is pulled from an Amazon S3 bucket, the data is cleansed and then finally the data is processed for insights.  Each step is commented in the file itself.
 
+* `124a514b9149_dag.py` - This is a DAG ("Directed Acyclic Graph").  This is a definition for a workflow to be run on Amazon Managed Workflows for Apache Airflow. It will attempt to run the notebook mentioned above on a daily schedule.
+
 For the streaming demonstration:
 
 * `user_posting_emulation_streaming.py` - This script pulls sample Pinterest data, raw data, from a database, and then sends the data to a configured Amazon API gateway (different endpoints to the batch demo).  The gate endpoints have been configured so that the data is sent to an Amazon Kinesis data stream instance.
