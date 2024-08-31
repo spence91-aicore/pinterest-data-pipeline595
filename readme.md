@@ -94,5 +94,96 @@ RDS_PORT: $DBPORT
 
 # AWS Configurations
 
+There are several AWS servies that were configured for the demonstrations.
 
-*TBC*
+For Batch Processing:
+
+* **Amazon API Gateway** - configured to route sample Pintrest data 
+* **EC2 instance** - a server was created, and configured to be a Kafka REST Proxy, and a "consumer", which will write data to a...
+* ...**S3 Bucket** - this is where the data from the Kafka consumer is stored, ready to be processed by databricks. 
+* **Amazon Managed Workflows for Apache Airflow** - a DAG ("Directed Acyclic Graph") created and uploaded to run the batch process for the data stored in the S3 Bucket mentioned above.
+
+(For this demonstration, the Kafka instance (was already configured and set up)
+
+For Data Streaming:
+
+* **Amazon API Gateway** - configured to route sample Pintrest data that is in a streaming format to...
+* ...**Amazon Kinesis Data Streams** - 3 Streams created and configured to accept the 3 different streaming sample Pintrest data 
+
+## Batch Processing AWS Configurations
+
+The configurations detail below are in the order that they would need to be created. e.g you can't route the API Gateway until you know the EC2 instance that you're going to point it to.
+
+### EC2 Instance, Configured to be a Kafka consumer, REST Proxy
+
+Create an EC2 Instance. And make sure SSH keys have been captured securly.
+
+SSH into the Instance:
+
+Grab Kafka package, and install dependancies for it:
+
+```
+cd ~
+sudo yum install java-1.8.0
+wget https://archive.apache.org/dist/kafka/2.8.1/kafka_2.12-2.8.1.tgz
+tar zxvvf kafka_2.12-2.8.1.tgz
+```
+
+Fetch the library that allows Kafka to work with amazon IAM security roles.
+Export the library, so that it can be seen when running the Kafka client.
+
+```
+cd /home/ec2-user/kafka_2.12-2.8.1/libs
+wget https://github.com/aws/aws-msk-iam-auth/releases/download/v1.1.5/aws-msk-iam-auth-1.1.5-all.jar
+export CLASSPATH=/home/ec2-user/kafka_2.12-2.8.1/libs/aws-msk-iam-auth-1.1.5-all.jar
+```
+
+Configure the Kafka client by creating the `client.properties` file in the right place:
+
+```
+cd /home/ec2-user/kafka_2.12-2.8.1/bin
+touch client.properties
+```
+
+then edit the newly created file:
+
+`awsRoleArn` param should be set to the IAM security role that will grant access to Kafka.
+
+```
+# Sets up TLS for encryption and SASL for authN.
+security.protocol = SASL_SSL
+
+# Identifies the SASL mechanism to use.
+sasl.mechanism = AWS_MSK_IAM
+
+# Binds SASL client implementation.
+sasl.jaas.config = software.amazon.msk.auth.iam.IAMLoginModule required awsRoleArn="arn:aws:iam::584739742957:role/124a514b9149-ec2-access-role";
+
+# Encapsulates constructing a SigV4 signature based on extracted credentials.
+# The SASL client bound by "sasl.jaas.config" invokes this class.
+sasl.client.callback.handler.class = software.amazon.msk.auth.iam.IAMClientCallbackHandler
+```
+
+Create Kafka topics:
+
+create 3 topics, one for each table of example Pintrest data, `pin`, `geo`, and `user`
+
+`--bootstrap-server` - this value can be found by navigating to the Amazon MSK cluster that needs to be connected to in AWS. And going to "View client information"   
+
+```
+cd ~/kafka_2.12-2.8.1/bin/
+
+
+./kafka-topics.sh --bootstrap-server b-3.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098,b-2.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098,b-1.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098 --command-config client.properties --create --topic 124a514b9149.pin
+
+./kafka-topics.sh --bootstrap-server b-3.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098,b-2.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098,b-1.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098 --command-config client.properties --create --topic 124a514b9149.geo
+
+./kafka-topics.sh --bootstrap-server b-3.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098,b-2.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098,b-1.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098 --command-config client.properties --create --topic 124a514b9149.user
+```
+
+
+
+
+## Data Streaming AWS Configurations
+
+TBC
