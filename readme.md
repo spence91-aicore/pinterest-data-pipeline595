@@ -65,7 +65,7 @@ conda env create -f .\environment.yml
 
 Please note - other package versions **may** work fine, but the versions outlined is what **has been tested**.
 
-If you want to run the notebooks then you'll also need to have ipykernel installed as well.
+If you want to run the notebooks locally then you'll also need to have ipykernel installed as well.
 
 ```
 python -m pip install ipykernel==6.29
