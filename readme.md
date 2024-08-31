@@ -17,7 +17,7 @@ Streaming Data.
 
 ## Scenario Architecture
 
-![The diagram of the architecture used in the project.](img\Pintrest_pipeline_arch.jpg)
+![The diagram of the architecture used in the project.](img/Pintrest_pipeline_arch.jpg)
 
 
 ## Local Installation
