@@ -99,8 +99,8 @@ There are several AWS servies that were configured for the demonstrations.
 For Batch Processing:
 
 * **Amazon API Gateway** - configured to route sample Pintrest data 
-* **EC2 instance** - a server was created, and configured to be a Kafka REST Proxy, and a "consumer", which will write data to a...
-* ...**S3 Bucket** - this is where the data from the Kafka consumer is stored, ready to be processed by databricks. 
+* **EC2 instance** - a server was created, and configured to be a Kafka REST Proxy, and a "consumer", which will write data to Kafka cluster...
+* ...**MSK (Kafka) -> S3 Bucket** - this is where the data from the Kafka consumer is stored, ready to be processed by databricks. Configuration is to get Kafka to write to S3. 
 * **Amazon Managed Workflows for Apache Airflow** - a DAG ("Directed Acyclic Graph") created and uploaded to run the batch process for the data stored in the S3 Bucket mentioned above.
 
 (For this demonstration, the Kafka instance (was already configured and set up)
@@ -181,7 +181,47 @@ cd ~/kafka_2.12-2.8.1/bin/
 ./kafka-topics.sh --bootstrap-server b-3.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098,b-2.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098,b-1.pinterestmskcluster.w8g8jt.c12.kafka.us-east-1.amazonaws.com:9098 --command-config client.properties --create --topic 124a514b9149.user
 ```
 
+### MSK (Kafka) -> S3 Bucket
 
+To enable  Kafka to write to S3, a **connector** will need to be created. The connector will need to run a **plugin** to work. The plugin is **Kafka S3 Sink Connector** (https://www.confluent.io/hub/confluentinc/kafka-connect-s3). This plugin needs to be available in AWS, in an S3 bucket.
+
+e.g 
+
+```
+wget https://d2p6pa21dvn84.cloudfront.net/api/plugins/confluentinc/kafka-connect-s3/versions/10.0.3/confluentinc-kafka-connect-s3-10.0.3.zip
+aws s3 cp confluentinc-kafka-connect-s3-10.0.3.zip s3:$YOUR_BUCKET_NAME
+```
+
+This is done in AWS Console - Navigate to **MSK** AWS service, and open up the relavent cluster. 
+
+Then Navigate to **Connectors** -> **new** connector
+
+enter a meaningful name and description, other details below:
+
+(img/MSK_Annotation 2024-09-01 224030.png)
+
+* Custom plugin type: set this to the **URI of the Kafka S3 Sink Connecter**, which is detailed above.
+* Connector configuration: 
+  * `$PINTREST_NAMESPACE` - replace with the namespace(if there is one) for the pintrest data streams. e.g `pintrest.*` - if there straeams are called `pintrest.pin`, `pintrest.geo`, etc
+  * `$TARGET_BUCKET` - replace with the name of the bucket that'll be written to. 
+
+```
+connector.class=io.confluent.connect.s3.S3SinkConnector  
+# same region as our bucket and cluster  
+s3.region=us-east-1  
+flush.size=1  
+schema.compatibility=NONE  
+tasks.max=3  
+# include nomeclature of topic name  
+topics.regex=$PINTREST_NAMESPACE.*  
+format.class=io.confluent.connect.s3.format.json.JsonFormat  
+partitioner.class=io.confluent.connect.storage.partitioner.DefaultPartitioner  
+value.converter.schemas.enable=false  
+value.converter=org.apache.kafka.connect.json.JsonConverter  
+storage.class=io.confluent.connect.s3.storage.S3Storage  
+key.converter=org.apache.kafka.connect.storage.StringConverter  
+s3.bucket.name=$TARGET_BUCKET  
+```
 
 
 ## Data Streaming AWS Configurations
