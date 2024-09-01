@@ -202,7 +202,7 @@ enter a meaningful name and description, other details below:
 
 * Custom plugin type: set this to the **URI of the Kafka S3 Sink Connecter**, which is detailed above.
 * Connector configuration: 
-  * `$PINTREST_NAMESPACE` - replace with the namespace(if there is one) for the pintrest data streams. e.g `pintrest.*` - if there straeams are called `pintrest.pin`, `pintrest.geo`, etc
+  * `$PINTREST_NAMESPACE` - replace with the namespace(if there is one) for the pintrest data streams. e.g `pintrest.*` - if there streams are called `pintrest.pin`, `pintrest.geo`, etc
   * `$TARGET_BUCKET` - replace with the name of the bucket that'll be written to. 
 
 ```
@@ -223,6 +223,9 @@ key.converter=org.apache.kafka.connect.storage.StringConverter
 s3.bucket.name=$TARGET_BUCKET  
 ```
 
+### Amazon Managed Workflows for Apache Airflow
+
+TBC
 
 ## Data Streaming AWS Configurations
 
