@@ -225,8 +225,22 @@ s3.bucket.name=$TARGET_BUCKET
 
 ### Amazon Managed Workflows for Apache Airflow
 
-TBC
+The `124a514b9149_dag.py` file needs to be uploaded/placed in the right ddirectory fdor it to be picked iup. In this demonstration, it was placed in an AWS s3 bucket that Amazon Managed Workflows for Apache Airflow was montiroting.
+
+
+The file iteself will need the follwoing changed:
+
+* `notebook_path` - this needs to be the URI for the notebook in **Databricks**
 
 ## Data Streaming AWS Configurations
 
-TBC
+The configurations detail below are in the order that they would need to be created. e.g you can't route the API Gateway until you know the EC2 instance that you're going to point it to.
+
+### Amazon Kinesis.
+
+Create 3 Kinesis streams. These will be used via Amazon API Gateway, and will recieve streaming data to be processed by databricks.
+
+### Amazon API Gateway
+
+Configure `PUT` methods to route example Pintrest Streaming data to Kinisis.
+
