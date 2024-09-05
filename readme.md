@@ -27,7 +27,7 @@ There's two main demonstrations:
 
 For the batch processing demonstration:
 
-* `user_posting_emulation.py` -  This script pulls sample Pinterest data, raw data, from a database, and then sends the data to a configured Amazon API gateway.  The gate endpoints have been configured so that the data is sent to a Kafka producer. This file can be run locally.
+* `user_posting_emulation.py` -  This script pulls sample Pinterest data, from a database, and then sends the data to a configured Amazon API gateway.  The gate endpoints have been configured so that the data is sent to a Kafka producer. This file can be run locally.
 
 * `databricks_s3_to_databricks.ipynb` -  This notebook is run on the Databricks platform and is scheduled to run using Amazon managed workflows for Apache Airflow.  Pinterest data is pulled from an Amazon S3 bucket, the data is cleansed and then finally the data is processed for insights.  Each step is commented in the file itself.
 
@@ -35,7 +35,7 @@ For the batch processing demonstration:
 
 For the streaming demonstration:
 
-* `user_posting_emulation_streaming.py` - This script pulls sample Pinterest data, raw data, from a database, and then sends the data to a configured Amazon API gateway (different endpoints to the batch demo).  The gate endpoints have been configured so that the data is sent to an Amazon Kinesis data stream instance. This file can be run locally.
+* `user_posting_emulation_streaming.py` - This script pulls sample Pinterest data, from a database, and then sends the data to a configured Amazon API gateway (different endpoints to the batch demo).  The gate endpoints have been configured so that the data is sent to an Amazon Kinesis data stream instance. This file can be run locally.
 
 * `databricks_kinisis_to_databricks.ipynb` -  This notebook is run on the Databricks platform.  It reads data from Kinesis streams, it cleanses the data and then writes the cleansed data to tables in Databricks.  This can be set to be run indefinitely so that the streaming data is constantly processed and written.
 
@@ -242,5 +242,25 @@ Create 3 Kinesis streams. These will be used via Amazon API Gateway, and will re
 
 ### Amazon API Gateway
 
-Configure `PUT` methods to route example Pintrest Streaming data to Kinisis.
+Configure methods to route example Pintrest Streaming data to Kinisis.
+
+For the demonstration - it's as below:
+
+each integration request routing to Kinesis, as below:
+
+(img/Annotation 2024-09-05 231420.png)
+
+(please note - the mapping is to adhere to the Kinesis API - detailed here - https://docs.aws.amazon.com/kinesis/latest/APIReference/Welcome.html)
+
+`/streams/` - GET
+
+(img/APIGWS_Annotation 2024-09-05 224748.png)
+
+(img/GET_Screenshot 2024-09-05 at 22-55-31 API Gateway - Resources.png)
+(img/SN_DELETE_Screenshot 2024-09-05 at 22-56-26 API Gateway - Resources.png)
+(img/SN_GET_Screenshot 2024-09-05 at 22-57-15 API Gateway - Resources.png)
+(img/SN_POST_Screenshot 2024-09-05 at 22-57-51 API Gateway - Resources.png)
+(img/SN_PUT_record_Screenshot 2024-09-05 at 22-58-18 API Gateway - Resources.png)
+(img/SN_PUT_records_Screenshot 2024-09-05 at 22-58-55 API Gateway - Resources.png)
+
 
