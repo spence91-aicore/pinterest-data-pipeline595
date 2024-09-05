@@ -246,6 +246,8 @@ Configure methods to route example Pintrest Streaming data to Kinisis.
 
 For the demonstration - it's as below:
 
+(img/APIGWS_Annotation 2024-09-05 224748.png)
+
 each integration request routing to Kinesis, as below:
 
 (img/Annotation 2024-09-05 231420.png)
@@ -254,13 +256,26 @@ each integration request routing to Kinesis, as below:
 
 `/streams/` - GET
 
-(img/APIGWS_Annotation 2024-09-05 224748.png)
-
 (img/GET_Screenshot 2024-09-05 at 22-55-31 API Gateway - Resources.png)
+
+`/streams/{stream-name}` - DELETE
+
 (img/SN_DELETE_Screenshot 2024-09-05 at 22-56-26 API Gateway - Resources.png)
+
+`/streams/{stream-name}` - GET
+
 (img/SN_GET_Screenshot 2024-09-05 at 22-57-15 API Gateway - Resources.png)
+
+`/streams/{stream-name}` - POST
+
 (img/SN_POST_Screenshot 2024-09-05 at 22-57-51 API Gateway - Resources.png)
+
+`/streams/{stream-name}/record` - PUT
+
 (img/SN_PUT_record_Screenshot 2024-09-05 at 22-58-18 API Gateway - Resources.png)
+
+`/streams/{stream-name}/records` - PUT
+
 (img/SN_PUT_records_Screenshot 2024-09-05 at 22-58-55 API Gateway - Resources.png)
 
 
