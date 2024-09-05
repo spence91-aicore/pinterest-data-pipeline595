@@ -246,36 +246,36 @@ Configure methods to route example Pintrest Streaming data to Kinisis.
 
 For the demonstration - it's as below:
 
-(img/APIGWS_Annotation 2024-09-05 224748.png)
+![](img/APIGWS_Annotation%202024-09-05%20224748.png)
 
 each integration request routing to Kinesis, as below:
 
-(img/Annotation 2024-09-05 231420.png)
+![](img/Annotation%202024-09-05%20231420.png)
 
 (please note - the mapping is to adhere to the Kinesis API - detailed here - https://docs.aws.amazon.com/kinesis/latest/APIReference/Welcome.html)
 
 `/streams/` - GET
 
-(img/GET_Screenshot 2024-09-05 at 22-55-31 API Gateway - Resources.png)
+![](img/GET_Screenshot%202024-09-05%20at%2022-55-31%20API%20Gateway%20-%20Resources.png)
 
 `/streams/{stream-name}` - DELETE
 
-(img/SN_DELETE_Screenshot 2024-09-05 at 22-56-26 API Gateway - Resources.png)
+![](img/SN_DELETE_Screenshot%202024-09-05%20at%2022-56-26%20API%20Gateway%20-%20Resources.png)
 
 `/streams/{stream-name}` - GET
 
-(img/SN_GET_Screenshot 2024-09-05 at 22-57-15 API Gateway - Resources.png)
+![](img/SN_GET_Screenshot%202024-09-05%20at%2022-57-15%20API%20Gateway%20-%20Resources.png)
 
 `/streams/{stream-name}` - POST
 
-(img/SN_POST_Screenshot 2024-09-05 at 22-57-51 API Gateway - Resources.png)
+![](img/SN_POST_Screenshot%202024-09-05%20at%2022-57-51%20API%20Gateway%20-%20Resources.png)
 
 `/streams/{stream-name}/record` - PUT
 
-(img/SN_PUT_record_Screenshot 2024-09-05 at 22-58-18 API Gateway - Resources.png)
+![](img/SN_PUT_record_Screenshot%202024-09-05%20at%2022-58-18%20API%20Gateway%20-%20Resources.png)
 
 `/streams/{stream-name}/records` - PUT
 
-(img/SN_PUT_records_Screenshot 2024-09-05 at 22-58-55 API Gateway - Resources.png)
+![](img/SN_PUT_records_Screenshot%202024-09-05%20at%2022-58-55%20API%20Gateway%20-%20Resources.png)
 
 
