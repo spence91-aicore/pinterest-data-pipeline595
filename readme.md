@@ -164,7 +164,7 @@ sasl.jaas.config = software.amazon.msk.auth.iam.IAMLoginModule required awsRoleA
 sasl.client.callback.handler.class = software.amazon.msk.auth.iam.IAMClientCallbackHandler
 ```
 
-Create Kafka topics:
+#### Create Kafka topics:
 
 create 3 topics, one for each table of example Pintrest data, `pin`, `geo`, and `user`
 
@@ -223,6 +223,22 @@ key.converter=org.apache.kafka.connect.storage.StringConverter
 s3.bucket.name=$TARGET_BUCKET  
 ```
 
+### Amazon API Gateway
+
+Configure method to route example Pintrest batch processing data to the EC2 instance that has been set up as a REST proxy for Kafka (detailed above).
+
+For the demonstration - it's as below:
+
+![](img/APIB_Screenshot%202024-09-08%20at%2022-04-39%20API%20Gateway%20-%20Resources.png)
+
+For the`ANY` method` - make sure the *integration type* is "HTTP", and the endpoint is *the name of the EC2 instance that was just set up*.
+
+e.g 
+
+```
+http://ec2-00-000-000-00.compute-1.amazonaws.com:8082/{proxy}
+```
+
 ### Amazon Managed Workflows for Apache Airflow
 
 The `124a514b9149_dag.py` file needs to be uploaded/placed in the right ddirectory fdor it to be picked iup. In this demonstration, it was placed in an AWS s3 bucket that Amazon Managed Workflows for Apache Airflow was montiroting.
@@ -231,6 +247,7 @@ The `124a514b9149_dag.py` file needs to be uploaded/placed in the right ddirecto
 The file iteself will need the follwoing changed:
 
 * `notebook_path` - this needs to be the URI for the notebook in **Databricks**
+
 
 ## Data Streaming AWS Configurations
 
@@ -244,6 +261,8 @@ Create 3 Kinesis streams. These will be used via Amazon API Gateway, and will re
 
 Configure methods to route example Pintrest Streaming data to Kinisis.
 
+The route mapping is to adhere to the Kinesis API - detailed here - https://docs.aws.amazon.com/kinesis/latest/APIReference/Welcome.html)
+
 For the demonstration - it's as below:
 
 ![](img/APIGWS_Annotation%202024-09-05%20224748.png)
@@ -252,7 +271,6 @@ each integration request routing to Kinesis, as below:
 
 ![](img/Annotation%202024-09-05%20231420.png)
 
-(please note - the mapping is to adhere to the Kinesis API - detailed here - https://docs.aws.amazon.com/kinesis/latest/APIReference/Welcome.html)
 
 `/streams/` - GET
 
